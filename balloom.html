@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <title></title>
+        <meta name=viewport content='initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no'>
+        <style>
+            .balloon{
+                width: 100px;
+                height: 100px;
+                background: red;
+                border-radius: 50%;
+                position: absolute;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- <div class="balloon"></div> -->
+    </body>
+    <script>
+        var num = 20;
+        var wH = window.innerHeight;
+        var wW = window.innerWidth;
+        var bZ = 100;
+        var balloons = [];
+        init();
+        function init(){
+            var fragment = document.createDocumentFragment();
+            for(var i=0;i<num;i++){
+                var random = (Math.random()*wW - bZ )|0;
+                random = Math.abs(random) 
+                var balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.top = wH - bZ+ 'px';
+                balloon.style.left = random  + 'px';
+                balloon.speed = Math.random()*8|0
+                fragment.appendChild(balloon);
+                balloons.push(balloon)
+            }
+            document.body.appendChild(fragment);
+            
+        }
+        function move(){
+            for(var i=0,len = balloons.length;i<len;i++){
+                if(balloons[i].offsetTop< -bZ){
+                    var random = (Math.random()*wW - bZ )|0;
+                        random = Math.abs(random) 
+                    balloons[i].style.top = wH + 'px';
+                    balloons[i].style.left = random  + 'px';
+                }else{
+                    balloons[i].style.top = balloons[i].offsetTop - balloons[i].speed +'px'
+                }
+                
+            }
+        }
+        setInterval(function(){
+            
+            move();
+        },30)
+    </script>
+</html>

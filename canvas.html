@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <title></title>
+    </head>
+    <body>
+        <canvas id="bubble" >Fallback content, in case the browser does not support Canvas.</canvas>
+        <script>
+            window.onresize
+            var canvasScreen = document.getElementById('bubble');
+            console.log(canvasScreen)
+            var canCon = canvasScreen.getContext("2d");
+            var w,h;
+            var colorArr = ['#339999','#FF6666','#66CC66','#990033','#663366']
+            w = document.documentElement.clientWidth;
+            h = document.documentElement.clientHeight;
+            canvasScreen.width = w;
+            canvasScreen.height = h;
+            console.log(w)
+            window.onresize =function(){
+                w = document.documentElement.clientWidth;
+                h = document.documentElement.clientHeight;
+                canvasScreen.width = w;
+                canvasScreen.height = h;
+            }
+            function random(min,max){
+                return Math.random()*(max-min)+min;
+            }
+            var pX,pY;
+            canvasScreen.onmousemove=function(){
+                var ev=window.event;
+                pX = ev.clientX;
+                pY = ev.clientY;
+            }
+            canvasScreen.onmouseleave=function(){
+                canvasScreen.onmouseover = null
+            }
+            function Bubble(){}
+            Bubble.prototype={
+                init:function(){
+                    this.x=random(0,w); //x轴位置
+                    this.y=random(0,w);//y轴位置
+                    this.r=random(1,5);//半径位置
+                    this.color=colorArr[Math.floor(random(0,5))] //颜色
+                    this.xV=random(-2,2);//每秒移动位置
+                    this.yV=random(-2,2);//每秒移动位置
+                    this.d = 50
+                },
+                draw:function(){
+                    canCon.beginPath();
+                    canCon.fillStyle=this.color;
+                    canCon.arc(this.x,this.y,this.r,0,Math.PI*2);
+                    canCon.fill()
+                },
+                move:function(){
+                    this.x+=this.xV;
+                    this.y+=this.yV;
+                    if(this.x-this.r<=0||this.x>w-this.r){
+                        this.xV=-this.xV
+                    }
+                    if(this.y-this.r<=0||this.y>h-this.r){
+                        this.yV=-this.yV
+                    }
+                    if(Math.sqrt(Math.pow(this.x-pX,2)+Math.pow(this.y-pY,2))<this.d&&this.r<this.d){
+                        this.r++;
+                    }else if(this.r>3&&Math.sqrt(Math.pow(this.x-pX,2)+Math.pow(this.y-pY,2))>this.d){
+                        this.r--;
+                    }
+                    this.draw()
+                }
+            }
+            var arrBubble = [];
+            function creat(num){
+                for(var i=0;i<num;i++){
+                    var bubble = new Bubble()
+                    bubble.init()
+                    bubble.draw()
+                    arrBubble.push(bubble)
+                } 
+            }
+            creat(500)
+            setInterval(function(){
+                canCon.clearRect(0,0,w,h);
+                for(var item of arrBubble){
+                    item.move()
+                }
+            },1000/60)
+        </script>
+    </body>
+</html>
